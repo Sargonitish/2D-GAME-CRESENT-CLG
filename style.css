@@ -1,0 +1,650 @@
+/*
+  TEAM MARVELZ PRESENTS
+  OPERATION: STEAL THE ACORN — 2D Arctic Adventure & Combat Game
+  Visual Styling & Layout
+*/
+
+:root {
+  --wood-dark: #451a03;
+  --wood-plank: #78350f;
+  --wood-light: #92400e;
+  --ice-blue: #38bdf8;
+  --ice-glow: #7dd3fc;
+  --gold-acorn: #f59e0b;
+  --gold-light: #fde047;
+  --danger-red: #ef4444;
+  --safe-green: #22c55e;
+  --font-family: 'Fredoka', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #031322;
+  font-family: var(--font-family);
+  color: #0f172a;
+}
+
+#gameContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0284c7 0%, #031322 100%);
+}
+
+#viewport {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  aspect-ratio: 16 / 9;
+  max-height: 100vh;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(186, 230, 253, 0.45);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =========================================
+   SCREEN LAYERS & STATE CONTROLLER
+   ========================================= */
+
+.screen-layer {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.screen-layer.active {
+  display: flex;
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* Floating Sound Toggle Button */
+.floating-sound-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 60;
+  background: rgba(15, 23, 42, 0.75);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s, background-color 0.2s;
+}
+
+.floating-sound-btn:hover {
+  transform: scale(1.1);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+/* =========================================
+   SCREEN 1: CINEMATIC INTRO SCREEN
+   ========================================= */
+
+#screenIntro {
+  background: #000000;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.intro-content {
+  text-align: center;
+  animation: introFade 3.2s ease-in-out forwards;
+}
+
+.intro-team-badge {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #38bdf8;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.intro-title {
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(56, 189, 248, 0.8), 0 0 40px rgba(245, 158, 11, 0.5);
+}
+
+.intro-skip-hint {
+  margin-top: 32px;
+  font-size: 14px;
+  color: #94a3b8;
+  letter-spacing: 1px;
+}
+
+@keyframes introFade {
+  0% { opacity: 0; transform: scale(0.94); }
+  25% { opacity: 1; transform: scale(1.0); }
+  75% { opacity: 1; transform: scale(1.0); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+
+/* =========================================
+   SCREEN 2: HOME PAGE WITH REFERENCE ART
+   ========================================= */
+
+#screenHome {
+  background: url('assets/images/menu_background.jpg') center center / cover no-repeat;
+  justify-content: flex-end;
+  padding-bottom: 30px;
+}
+
+.home-menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 5;
+}
+
+/* =========================================
+   CARTOON WOODEN & GOLD BUTTONS
+   ========================================= */
+
+.btn-group {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.btn-cartoon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 26px;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+  border: 3px solid var(--wood-dark);
+  border-radius: 12px;
+  box-shadow: 0 6px 0 var(--wood-dark), 0 10px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s;
+}
+
+.btn-cartoon:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 var(--wood-dark), 0 14px 24px rgba(0, 0, 0, 0.4);
+}
+
+.btn-cartoon:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--wood-dark);
+}
+
+.btn-cartoon.btn-large {
+  font-size: 22px;
+  padding: 16px 42px;
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  border-color: #14532d;
+  box-shadow: 0 7px 0 #14532d, 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+.btn-cartoon.btn-large:hover {
+  box-shadow: 0 9px 0 #14532d, 0 16px 28px rgba(0, 0, 0, 0.45);
+}
+.btn-cartoon.btn-large:active {
+  box-shadow: 0 2px 0 #14532d;
+}
+
+.btn-cartoon.btn-secondary {
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  border-color: #0369a1;
+  box-shadow: 0 6px 0 #0369a1, 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-cartoon.btn-danger {
+  background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+  border-color: #7f1d1d;
+  box-shadow: 0 6px 0 #7f1d1d, 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================
+   WOODEN & FROSTED MODAL PANELS
+   ========================================= */
+
+.wood-panel {
+  position: relative;
+  background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-plank) 100%);
+  border: 4px solid var(--wood-dark);
+  border-radius: 18px;
+  padding: 28px 36px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.25);
+  text-align: center;
+  max-width: 800px;
+  width: 90%;
+}
+
+.wood-panel::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: -6px;
+  right: -6px;
+  height: 20px;
+  background: #ffffff;
+  border-radius: 20px 20px 10px 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), inset 0 -3px 4px #bae6fd;
+}
+
+.ice-modal {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.85);
+  border: 3px solid rgba(186, 230, 253, 0.65);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 720px;
+  width: 90%;
+  color: #f8fafc;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.panel-title {
+  font-size: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 3px 0 var(--wood-dark);
+  margin-bottom: 14px;
+}
+
+/* =========================================
+   SCREEN 3: CHARACTER SELECTION CARDS
+   ========================================= */
+
+.char-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.char-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 3px solid #38bdf8;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  transition: transform 0.15s, border-color 0.2s;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.char-card.selected {
+  border-color: #fde047;
+  background: rgba(2, 132, 199, 0.75);
+  transform: translateY(-4px);
+}
+
+.char-portrait {
+  font-size: 42px;
+  text-align: center;
+}
+
+.char-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+}
+
+.char-role {
+  font-size: 12px;
+  font-weight: bold;
+  color: #fde047;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.char-desc {
+  font-size: 12px;
+  color: #bae6fd;
+  line-height: 1.3;
+}
+
+.char-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0;
+}
+
+.stat-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.bar-bg {
+  width: 90px;
+  height: 8px;
+  background: #334155;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.char-special-badge {
+  font-size: 11px;
+  color: #fde047;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(253, 224, 71, 0.3);
+}
+
+/* =========================================
+   SCREEN 7: THE FROZEN FRONTIER MAP
+   ========================================= */
+
+.map-modal {
+  width: 90%;
+  max-width: 900px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 3px solid #38bdf8;
+  border-radius: 20px;
+  padding: 24px;
+  color: #ffffff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.map-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.map-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: #fde047;
+  letter-spacing: 1px;
+}
+
+.map-destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.map-node {
+  background: rgba(30, 41, 59, 0.8);
+  border: 2px solid #64748b;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s;
+}
+
+.map-node.unlocked {
+  border-color: #38bdf8;
+}
+
+.map-node.unlocked:hover, .map-node.selected {
+  border-color: #fde047;
+  background: rgba(2, 132, 199, 0.6);
+  transform: translateY(-3px);
+}
+
+.map-node.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+.map-node-badge {
+  font-size: 10px;
+  font-weight: 900;
+  color: #fde047;
+}
+
+.map-node-name {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.map-node-desc {
+  font-size: 10px;
+  color: #bae6fd;
+}
+
+.map-node-stars {
+  font-size: 12px;
+  margin-top: auto;
+}
+
+.map-node-score {
+  font-size: 9px;
+  color: #86efac;
+}
+
+.map-selected-details {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   GAMEPLAY HUD
+   ========================================= */
+
+#gameplayHUD {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px 20px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+#gameplayHUD.visible {
+  display: flex;
+}
+
+.hud-players-cluster {
+  display: flex;
+  gap: 16px;
+  pointer-events: auto;
+}
+
+.player-hud-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid #38bdf8;
+  border-radius: 12px;
+  padding: 8px 14px;
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.player-hud-portrait {
+  font-size: 28px;
+}
+
+.player-hud-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 130px;
+}
+
+.hud-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: #334155;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.hud-bar-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  transition: width 0.15s ease;
+}
+
+/* Boss Health Bar (Centered at Top) */
+#bossHealthContainer {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 320px;
+  pointer-events: auto;
+}
+
+.boss-bar-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #fde047;
+  letter-spacing: 1px;
+}
+
+.boss-bar-bg {
+  width: 100%;
+  height: 14px;
+  background: #1e293b;
+  border: 2px solid #ef4444;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.boss-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ef4444, #f59e0b);
+  border-radius: 5px;
+  transition: width 0.15s ease;
+}
+
+.hud-right-cluster {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.hud-badge {
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid #f59e0b;
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: #fde047;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.btn-hud-pause {
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn-hud-pause:hover {
+  transform: scale(1.08);
+  background: #0284c7;
+}
+
+/* Tutorial / Settings tables */
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  text-align: left;
+  margin: 16px 0;
+}
+
+.tutorial-item {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #f1f5f9;
+}
+
+.tut-key {
+  display: inline-block;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  margin-right: 4px;
+}

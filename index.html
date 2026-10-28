@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OPERATION: STEAL THE ACORN — Team Marvelz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="gameContainer">
+  <!-- Top Right Floating Sound / Mute Toggle -->
+  <button id="headerSoundToggle" class="floating-sound-btn" title="Toggle Sound / Mute" aria-label="Toggle Sound">
+    <span id="soundIcon">🔊</span>
+  </button>
+
+  <div id="viewport">
+    <!-- Main Game Canvas -->
+    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+
+    <!-- SCREEN 1: CINEMATIC OPENING INTRO SCREEN -->
+    <div id="screenIntro" class="screen-layer active">
+      <div class="intro-content">
+        <div class="intro-team-badge">TEAM MARVELZ</div>
+        <h1 class="intro-title">PRESENTS</h1>
+        <div class="intro-skip-hint">Press SPACE, ENTER or Click to Skip</div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: HOME PAGE (USING REFERENCE IMAGE) -->
+    <div id="screenHome" class="screen-layer">
+      <div class="home-menu-container">
+        <div class="btn-group" style="flex-direction: column; width: 280px;">
+          <button id="btnHomePlay" class="btn-cartoon btn-large">▶ PLAY</button>
+          <button id="btnHomeMultiplayer" class="btn-cartoon btn-secondary">👥 MULTIPLAYER</button>
+          <button id="btnHomeSettings" class="btn-cartoon btn-secondary">⚙️ SETTINGS</button>
+          <button id="btnHomeHowToPlay" class="btn-cartoon">📖 HOW TO PLAY</button>
+          <button id="btnHomeQuit" class="btn-cartoon btn-danger">❌ QUIT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: CHARACTER SELECTION SCREEN -->
+    <div id="screenCharSelect" class="screen-layer">
+      <div class="wood-panel" style="max-width: 900px;">
+        <h2 class="panel-title">CHOOSE YOUR ARCTIC HERO</h2>
+        <div id="charCardsContainer" class="char-cards-grid"></div>
+        <div class="btn-group">
+          <button id="btnConfirmCharSelect" class="btn-cartoon btn-large">CONTINUE TO WORLD MAP ▶</button>
+          <button id="btnCharSelectBack" class="btn-cartoon btn-secondary">BACK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: MULTIPLAYER LOBBY (LOCAL & ONLINE) -->
+    <div id="screenMultiplayer" class="screen-layer">
+      <div class="wood-panel">
+        <h2 class="panel-title">👥 MULTIPLAYER EXPEDITION</h2>
+        <p style="color: #fde047; font-size: 15px; margin-bottom: 20px;">
+          Choose your cooperative multiplayer experience!
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+          <!-- Mode A: Local Co-op -->
+          <div style="background: rgba(0,0,0,0.35); border: 2px solid #38bdf8; border-radius: 12px; padding: 16px; text-align: left;">
+            <h3 style="color: #38bdf8; margin-bottom: 8px;">🎮 LOCAL CO-OP (Same Keyboard)</h3>
+            <p style="font-size: 13px; color: #f1f5f9; line-height: 1.4; margin-bottom: 12px;">
+              Play together instantly on the same Mac/PC!
+              <br>• <strong>P1:</strong> A/D (Move) + W (Jump) + Space (Attack) + K (Special) + C (Swap Hero)
+              <br>• <strong>P2:</strong> Arrows + Up (Jump) + Shift (Attack) + Enter (Special)
+            </p>
+            <button id="btnStartLocalCoop" class="btn-cartoon btn-large" style="width: 100%;">START LOCAL 2P</button>
+          </div>
+
+          <!-- Mode B: Online WebSocket Server -->
+          <div style="background: rgba(0,0,0,0.35); border: 2px solid #f59e0b; border-radius: 12px; padding: 16px; text-align: left;">
+            <h3 style="color: #fde047; margin-bottom: 8px;">🌐 ONLINE CO-OP (WebSocket)</h3>
+            <p style="font-size: 13px; color: #f1f5f9; line-height: 1.4; margin-bottom: 8px;">
+              Connect via Node.js WebSocket room server.
+            </p>
+            <div id="onlineStatus" style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">Ready to connect</div>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <input type="text" id="roomCodeInput" placeholder="ROOM CODE" style="padding: 8px; border-radius: 6px; border: 2px solid #78350f; font-weight: bold; width: 110px; text-transform: uppercase;">
+              <button id="btnJoinRoom" class="btn-cartoon" style="padding: 8px 12px; font-size: 13px;">JOIN</button>
+            </div>
+            <button id="btnConnectOnline" class="btn-cartoon btn-secondary" style="width: 100%;">CREATE ONLINE ROOM</button>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button id="btnMultiplayerBack" class="btn-cartoon btn-secondary">BACK TO HOME</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: THE FROZEN FRONTIER WORLD MAP -->
+    <div id="screenWorldMap" class="screen-layer"></div>
+
+    <!-- SCREEN 6: GAMEPLAY HUD (ACTIVE IN-GAME) -->
+    <div id="gameplayHUD">
+      <!-- Players Status Cluster (P1 & P2) -->
+      <div class="hud-players-cluster">
+        <!-- Player 1 Card -->
+        <div id="p1HUDCard" class="player-hud-card">
+          <div id="p1Portrait" class="player-hud-portrait">🐿️</div>
+          <div class="player-hud-bars">
+            <div style="display: flex; justify-content: space-between; font-size: 10px; font-weight: bold;">
+              <span id="p1NameTag">P1: CHIKKU</span>
+              <span id="p1Lives">❤️❤️❤️</span>
+            </div>
+            <div class="hud-bar-bg"><div id="p1HealthFill" class="hud-bar-fill" style="background: #22c55e;"></div></div>
+            <div class="hud-bar-bg" style="height: 5px;"><div id="p1CooldownFill" class="hud-bar-fill" style="background: #38bdf8;"></div></div>
+          </div>
+        </div>
+
+        <!-- Player 2 Card (Co-op) -->
+        <div id="p2HUDCard" class="player-hud-card" style="display: none; border-color: #4ade80;">
+          <div id="p2Portrait" class="player-hud-portrait">🐅</div>
+          <div class="player-hud-bars">
+            <div style="display: flex; justify-content: space-between; font-size: 10px; font-weight: bold;">
+              <span id="p2NameTag">P2: TIGER</span>
+              <span id="p2Lives">❤️❤️❤️</span>
+            </div>
+            <div class="hud-bar-bg"><div id="p2HealthFill" class="hud-bar-fill" style="background: #22c55e;"></div></div>
+            <div class="hud-bar-bg" style="height: 5px;"><div id="p2CooldownFill" class="hud-bar-fill" style="background: #fde047;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boss Health Bar (Centered at Top) -->
+      <div id="bossHealthContainer">
+        <div class="boss-bar-title">⚠️ THE FROST GUARDIAN</div>
+        <div class="boss-bar-bg"><div id="bossHealthFill" class="boss-bar-fill"></div></div>
+      </div>
+
+      <!-- Right HUD Cluster: Level Title, Swap Badge, Acorns, Pause -->
+      <div class="hud-right-cluster">
+        <div id="hudSwapBadge" class="hud-badge" style="color: #fef08a; border-color: #fde047; cursor: pointer; font-size: 11px;" title="Press C to cycle character">[C] SWAP HERO</div>
+        <div id="hudLevelName" class="hud-badge" style="color: #ffffff; border-color: #38bdf8;">Stage 1</div>
+        <div class="hud-badge">🌰 <span id="hudAcornCount">0</span></div>
+        <button id="btnPause" class="btn-hud-pause" title="Pause Game (ESC)">⏸</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 7: PAUSE MENU -->
+    <div id="screenPause" class="screen-layer">
+      <div class="ice-modal" style="text-align: center;">
+        <h2 class="panel-title" style="font-size: 34px; margin-bottom: 20px;">GAME PAUSED</h2>
+        <div class="btn-group" style="flex-direction: column; width: 260px; margin: 0 auto;">
+          <button id="btnResume" class="btn-cartoon btn-large">▶ RESUME</button>
+          <button id="btnRestart" class="btn-cartoon btn-secondary">🔄 RESTART STAGE</button>
+          <button id="btnPauseSettings" class="btn-cartoon btn-secondary">⚙️ SETTINGS</button>
+          <button id="btnPauseMap" class="btn-cartoon">🗺️ WORLD MAP</button>
+          <button id="btnPauseHome" class="btn-cartoon btn-danger">🏠 MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 8: SETTINGS MODAL -->
+    <div id="screenSettings" class="screen-layer">
+      <div class="ice-modal">
+        <h2 class="panel-title" style="text-align: center;">⚙️ GAME SETTINGS</h2>
+
+        <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0; font-weight: bold; font-size: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>🎵 Music Volume</span>
+            <input type="range" id="musicVolume" min="0" max="1" step="0.05" value="0.6" style="width: 180px; accent-color: #f59e0b;">
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>🔊 Sound Effects Volume</span>
+            <input type="range" id="sfxVolume" min="0" max="1" step="0.05" value="0.8" style="width: 180px; accent-color: #f59e0b;">
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>🔇 Mute All Audio</span>
+            <input type="checkbox" id="muteToggle" style="width: 22px; height: 22px; cursor: pointer;">
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>🖥️ Fullscreen Mode</span>
+            <button id="btnFullscreenToggle" class="btn-cartoon btn-secondary" style="padding: 6px 14px; font-size: 13px;">Toggle Fullscreen</button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>🗑️ Reset All Progress</span>
+            <button id="btnResetProgress" class="btn-cartoon btn-danger" style="padding: 6px 14px; font-size: 13px;">Reset Data</button>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button id="btnCloseSettings" class="btn-cartoon btn-large">SAVE & CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 9: HOW TO PLAY -->
+    <div id="screenHowToPlay" class="screen-layer">
+      <div class="wood-panel" style="max-width: 800px;">
+        <h2 class="panel-title">📖 HOW TO PLAY & CONTROLS</h2>
+        
+        <div class="tutorial-grid">
+          <div class="tutorial-item">
+            <div><span class="tut-key">P1 Move</span> <span class="tut-key">A / D</span></div>
+            <div>Realistic acceleration & deceleration across snow and ice.</div>
+          </div>
+          <div class="tutorial-item">
+            <div><span class="tut-key">P1 Jump</span> <span class="tut-key">W / ▲</span></div>
+            <div>Jump with realistic apex hang-time. Chikku can double-jump!</div>
+          </div>
+          <div class="tutorial-item">
+            <div><span class="tut-key">P1 Attack</span> <span class="tut-key">SPACEBAR</span></div>
+            <div>Forward-lunging wide melee strike to easily hit & knock back enemies.</div>
+          </div>
+          <div class="tutorial-item">
+            <div><span class="tut-key">P1 Swap Hero</span> <span class="tut-key">C</span></div>
+            <div>Cycle between Chikku (Speed), Bumbo (Tank), & Frost Tiger (Power)!</div>
+          </div>
+          <div class="tutorial-item">
+            <div><span class="tut-key">P1 Special</span> <span class="tut-key">K</span></div>
+            <div>Unleash signature power: Acorn Dash, Ground Slam, Frost Fury.</div>
+          </div>
+          <div class="tutorial-item">
+            <div><span class="tut-key">Kill to Score</span> <span class="tut-key">⚔️ DEFEAT</span></div>
+            <div>Defeat goblins, wolves, and frost bosses to collect acorns and massive points!</div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button id="btnHowToPlayBack" class="btn-cartoon btn-secondary">BACK TO HOME</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 10: VICTORY SCREEN -->
+    <div id="screenVictory" class="screen-layer">
+      <div class="wood-panel">
+        <h2 class="panel-title" style="color: #fde047;">🎉 MISSION ACCOMPLISHED!</h2>
+        <div id="vicLevelName" style="font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">Stage 1</div>
+        <div id="vicStars" style="font-size: 38px; margin: 8px 0;">⭐⭐⭐</div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 12px; margin: 12px 0;">
+          <div><div style="font-size: 11px; color: #bae6fd;">ACORNS</div><div id="vicAcorns" style="font-size: 18px; font-weight: bold; color: #fde047;">0</div></div>
+          <div><div style="font-size: 11px; color: #bae6fd;">TIME</div><div id="vicTime" style="font-size: 18px; font-weight: bold; color: #fde047;">0s</div></div>
+          <div><div style="font-size: 11px; color: #bae6fd;">SCORE</div><div id="vicScore" style="font-size: 18px; font-weight: bold; color: #fde047;">0</div></div>
+        </div>
+
+        <div class="btn-group">
+          <button id="btnVicNextStage" class="btn-cartoon btn-large">NEXT STAGE ▶</button>
+          <button id="btnVicReplay" class="btn-cartoon btn-secondary">🔄 REPLAY</button>
+          <button id="btnVicMap" class="btn-cartoon">🗺️ WORLD MAP</button>
+          <button id="btnVicHome" class="btn-cartoon btn-danger">🏠 MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 11: DEFEAT SCREEN -->
+    <div id="screenDefeat" class="screen-layer">
+      <div class="wood-panel">
+        <h2 class="panel-title" style="color: #f87171;">💥 MISSION FAILED!</h2>
+        <div id="defeatLevelName" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 12px;">Stage 1</div>
+        <p style="font-style: italic; color: #fde047; margin-bottom: 20px;">
+          “The Arctic cold was too fierce! Regroup and try again!”
+        </p>
+
+        <div class="btn-group">
+          <button id="btnDefeatRetry" class="btn-cartoon btn-large">🔄 TRY AGAIN</button>
+          <button id="btnDefeatMap" class="btn-cartoon btn-secondary">🗺️ WORLD MAP</button>
+          <button id="btnDefeatHome" class="btn-cartoon">🏠 MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GAME MODULE SCRIPTS -->
+<script src="js/storage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/combat.js"></script>
+<script src="js/player.js"></script>
+<script src="js/enemies.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/map.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/multiplayer.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
